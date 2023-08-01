@@ -1,4 +1,3 @@
-import { useFetcher } from "react-router-dom";
 
 export function createCollection(title, callback){
     var existingCollections = JSON.parse(localStorage.getItem('collections') || '{}');
@@ -61,16 +60,20 @@ export function getCollectionsInAnime(animeID){
     const joinData = joinAnimeCollections()
     const listOfCollections: {id, title}[] = []
 
-    joinData.map((data) => {
-        data.animeList.map((anime) => {
-            if(anime.ID == animeID){
-                listOfCollections.push({
-                    id: data.id,
-                    title: data.title
+    if(joinData){
+        joinData.map((data) => {
+            if(data.animeList){
+                data.animeList.map((anime) => {
+                    if(anime.ID == animeID){
+                        listOfCollections.push({
+                            id: data.id,
+                            title: data.title
+                        })
+                    }
                 })
             }
         })
-    })
+    }
 
     return listOfCollections;
 }
@@ -116,4 +119,20 @@ export function modifyCollections(collectionIDs, animes, callback){
 
     callback()
     
+}
+
+export function deleteCollections(id, callback){
+    var collections = JSON.parse(localStorage.getItem('collections') || '[]');
+    var anime_collections = JSON.parse(localStorage.getItem('anime_collections') || '[]');
+
+    var indexA = collections.findIndex((obj => obj.id == id));
+    var indexB = anime_collections.findIndex((obj => obj.collectionID == id));
+
+    if (indexA > -1)  collections.splice(indexA, 1)
+    if (indexB > -1)  anime_collections.splice(indexB, 1)
+
+    localStorage.setItem('collections', JSON.stringify(collections))
+    localStorage.setItem('anime_collections', JSON.stringify(anime_collections))
+
+    callback()
 }

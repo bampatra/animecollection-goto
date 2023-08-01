@@ -3,8 +3,9 @@ import { useState, useEffect } from "react"
 import { modifyCollections, createCollection } from "../../services/collectionServices"
 
 export default function AddToCollection({ids, closeAction, selected}){
+    const [initCols, setInitCols] = useState<number[]>([]);
     const [collections, setCollections] = useState(JSON.parse(localStorage.getItem('collections') || '{}'))
-    const [selectedCols, setSelectedCols] = useState<string[]>([]);
+    const [selectedCols, setSelectedCols] = useState<number[]>([]);
 
     function handleNewCol(){
         createCollection("New Collection", function(data){
@@ -20,11 +21,12 @@ export default function AddToCollection({ids, closeAction, selected}){
 
     function handleChangeCheckbox(e){
         const { value, checked } = e.target;
+        const id = parseInt(value)
 
         if (checked) {
-            setSelectedCols([...selectedCols, value]);
+            setSelectedCols([...selectedCols, id]);
         } else {
-            setSelectedCols(selectedCols.filter((e) => e !== value));
+            setSelectedCols(selectedCols.filter((e) => e !== id));
         }
     }
 
@@ -34,31 +36,34 @@ export default function AddToCollection({ids, closeAction, selected}){
             temp.push(col.id)
         })
         setSelectedCols(temp)
-
+        setInitCols(temp)
     }, [])
+
 
     return(
         <>
             {(collections && collections.length > 0) && 
                 <form>
                     {collections.map((col) => (
-                        <p>
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                name="collections"
-                                value={col.id}
-                                id="flexCheckDefault"
-                                onChange={handleChangeCheckbox}
-                                checked={selectedCols.includes(col.id)}
-                            />
-                            <label
-                                className="form-check-label"
-                                htmlFor="flexCheckDefault"
-                            >
-                                {col.title}
-                            </label>
-                        </p>
+                        !initCols.includes(col.id) && (
+                            <p>
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    name="collections"
+                                    value={col.id}
+                                    id="flexCheckDefault"
+                                    onChange={handleChangeCheckbox}
+                                    checked={selectedCols.includes(col.id)}
+                                />
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="flexCheckDefault"
+                                >
+                                    {col.title}
+                                </label>
+                            </p>
+                        )
                     ))}
                 </form>
             }
