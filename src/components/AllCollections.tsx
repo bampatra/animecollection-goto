@@ -17,7 +17,7 @@ export default function AllCollections(){
     const [newName, setNewName] = useState('')
 
     const [openDel, setOpenDel] = useState(false)
-    const [toBeDeleted, setToBeDeleted] = useState({id: '', title: ''})
+    const [toBeModified, setToBeModified] = useState({id: '', title: ''})
 
     function handleAdd(){
         
@@ -50,7 +50,7 @@ export default function AllCollections(){
 
     useEffect(() => {
         if(!openDel){
-            setToBeDeleted({id: '', title: ''})
+            setToBeModified({id: '', title: ''})
         }
     }, [openDel])
 
@@ -68,7 +68,7 @@ export default function AllCollections(){
                                     <img src={collection.animeList && collection.animeList.length > 0 ? collection.animeList[0].coverImage : '/default_movie.png'} />
                                     <p> {collection.title} </p>
                                 </Link>
-                                <p onClick={() => { setToBeDeleted(collection); setOpenDel(true);  }}> Delete </p>
+                                <p onClick={() => { setToBeModified(collection); setOpenDel(true);  }}> Delete </p>
                             </Grid>
                         ))}
                     </>
@@ -90,7 +90,7 @@ export default function AllCollections(){
                 </DialogActions>
             </Dialog>
 
-            {toBeDeleted && 
+            {toBeModified && 
                 <Dialog 
                     open={openDel}
                     onClose={() => { setOpenDel(false) }}
@@ -99,10 +99,10 @@ export default function AllCollections(){
                         Delete Confirmation
                     </DialogTitle>
                     <DialogContent>
-                        Are you sure you want to delete {toBeDeleted.title}?
+                        Are you sure you want to delete {toBeModified.title}?
                     </DialogContent>
                     <DialogActions>
-                        <button onClick={() => handleRemove(toBeDeleted.id)}> Confirm </button>
+                        <button onClick={() => handleRemove(toBeModified.id)}> Confirm </button>
                     </DialogActions>
                 </Dialog>
             }

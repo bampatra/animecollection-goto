@@ -22,7 +22,7 @@ export function getAllCollections(){
 }
 
 export function getCollectionDetail(id){
-    var existingCollections = JSON.parse(localStorage.getItem('collections') || '{}');
+    var existingCollections = JSON.parse(localStorage.getItem('collections') || '[]');
     var obj = existingCollections.filter((obj => obj.id == id));
     return obj[0];
 }
@@ -53,7 +53,12 @@ export function joinAnimeCollections(){
 }
 
 export function getAnimesInCollection(colID){
-    
+    var anime_collections = joinAnimeCollections();
+    var results = []
+    const searchObj = anime_collections.find(x => x.id == colID)
+
+    if(searchObj.animeList) results = searchObj.animeList
+    return results;
 }
 
 export function getCollectionsInAnime(animeID){
@@ -132,6 +137,19 @@ export function deleteCollections(id, callback){
     if (indexB > -1)  anime_collections.splice(indexB, 1)
 
     localStorage.setItem('collections', JSON.stringify(collections))
+    localStorage.setItem('anime_collections', JSON.stringify(anime_collections))
+
+    callback()
+}
+
+export function removeAnimeFromCollection(colID, animeID, callback){
+    var anime_collections = JSON.parse(localStorage.getItem('anime_collections') || '[]');
+    var indexA = anime_collections.findIndex((obj => obj.collectionID == colID));
+    var animeList = anime_collections[indexA].animeList;
+    var indexB = animeList.findIndex((obj => obj.ID == animeID));
+
+    if (indexB > -1)  animeList.splice(indexB, 1)
+
     localStorage.setItem('anime_collections', JSON.stringify(anime_collections))
 
     callback()
