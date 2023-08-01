@@ -1,3 +1,5 @@
+import { useFetcher } from "react-router-dom";
+
 export function createCollection(title, callback){
     var existingCollections = JSON.parse(localStorage.getItem('collections') || '{}');
     if(Object.keys(existingCollections).length === 0) existingCollections = []
@@ -26,9 +28,53 @@ export function getCollectionDetail(id){
     return obj[0];
 }
 
-export function getAnimesInCollection(id){
+export function joinAnimeCollections(){
+    var collections = JSON.parse(localStorage.getItem('collections') || '[]');
+    var anime_collections = JSON.parse(localStorage.getItem('anime_collections') || '[]');
 
+    var joined = collections.map(function(e) {
+        return Object.assign({}, e, anime_collections.reduce(function(acc, val) {
+            if (e.id == val.collectionID) {
+                return {
+                    id: e.id,
+                    title: e.title,
+                    animeList: val.animeList
+                }
+            } else {
+                return {
+                    id: e.id,
+                    title: e.title,
+                    animeList: acc.animeList || []
+                }
+            }
+        }, {}))
+    });
+
+    return joined;
 }
+
+export function getAnimesInCollection(colID){
+    
+}
+
+export function getCollectionsInAnime(animeID){
+    const joinData = joinAnimeCollections()
+    const listOfCollections: {id, title}[] = []
+
+    joinData.map((data) => {
+        data.animeList.map((anime) => {
+            if(anime.ID == animeID){
+                listOfCollections.push({
+                    id: data.id,
+                    title: data.title
+                })
+            }
+        })
+    })
+
+    return listOfCollections;
+}
+
 
 export function modifyCollections(collectionIDs, animes, callback){
     if(collectionIDs.length != 0 && animes.length != 0){
@@ -49,7 +95,9 @@ export function modifyCollections(collectionIDs, animes, callback){
 
                 if(objIndex > -1){
                     var animeList = existingCollections[objIndex].animeList
-                    animeList.push(animes)
+                    animes.map((anime) => {
+                        animeList.push(anime)
+                    })
                     // existingCollections[objIndex].animeList = animeList
                 } else {
                     var newValue = {

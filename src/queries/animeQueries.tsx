@@ -36,6 +36,9 @@ export const GET_ANIME_BY_ID = gql`
             episodes
             genres
             averageScore
+            coverImage {
+                large
+            }
         }
     }
 `

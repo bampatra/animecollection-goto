@@ -2,7 +2,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { modifyCollections, createCollection } from "../../services/collectionServices"
 
-export default function AddToCollection({ids, closeAction}){
+export default function AddToCollection({ids, closeAction, selected}){
     const [collections, setCollections] = useState(JSON.parse(localStorage.getItem('collections') || '{}'))
     const [selectedCols, setSelectedCols] = useState<string[]>([]);
 
@@ -29,7 +29,12 @@ export default function AddToCollection({ids, closeAction}){
     }
 
     useEffect(() => {
-   
+        var temp: any[] = [];
+        selected.map((col) => {
+            temp.push(col.id)
+        })
+        setSelectedCols(temp)
+
     }, [])
 
     return(
@@ -45,6 +50,7 @@ export default function AddToCollection({ids, closeAction}){
                                 value={col.id}
                                 id="flexCheckDefault"
                                 onChange={handleChangeCheckbox}
+                                checked={selectedCols.includes(col.id)}
                             />
                             <label
                                 className="form-check-label"
