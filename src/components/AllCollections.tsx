@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { createCollection, deleteCollections, joinAnimeCollections } from "../services/collectionServices";
+import { createCollection, deleteCollections, editCollectionTitle, joinAnimeCollections } from "../services/collectionServices";
 import { colTitleCheck } from "../helpers/collectionHelpers";
 
 export default function AllCollections(){
@@ -17,6 +17,7 @@ export default function AllCollections(){
     const [newName, setNewName] = useState('')
 
     const [openDel, setOpenDel] = useState(false)
+    const [openEdit, setOpenEdit] = useState(false)
     const [toBeModified, setToBeModified] = useState({id: '', title: ''})
 
     function handleAdd(){
@@ -28,7 +29,6 @@ export default function AllCollections(){
 
         createCollection(newName, function(){
             setData(joinAnimeCollections());
-            setNewName('')
             setOpenCol(false)
         })
     }
@@ -40,7 +40,21 @@ export default function AllCollections(){
         })
     }
 
+    function handleSave(id){
+
+        if(!colTitleCheck(newName)){
+            alert('This title already exists or contains a special character')
+            return;
+        }
+
+        editCollectionTitle(id, newName, function(){
+            setOpenEdit(false)
+            getMasterData()
+        })
+    }
+
     function getMasterData(){
+        setNewName('')
         setData(joinAnimeCollections());
     }
 
@@ -49,10 +63,14 @@ export default function AllCollections(){
     }, [])
 
     useEffect(() => {
-        if(!openDel){
+        setNewName(toBeModified.title)
+    }, [toBeModified])
+
+    useEffect(() => {
+        if(!openDel && !openEdit){
             setToBeModified({id: '', title: ''})
         }
-    }, [openDel])
+    }, [openDel, openEdit])
 
     return(
         <>
@@ -69,6 +87,7 @@ export default function AllCollections(){
                                     <p> {collection.title} </p>
                                 </Link>
                                 <p onClick={() => { setToBeModified(collection); setOpenDel(true);  }}> Delete </p>
+                                <p onClick={() => { setToBeModified(collection); setOpenEdit(true);  }}> Edit </p>
                             </Grid>
                         ))}
                     </>
@@ -91,20 +110,37 @@ export default function AllCollections(){
             </Dialog>
 
             {toBeModified && 
-                <Dialog 
-                    open={openDel}
-                    onClose={() => { setOpenDel(false) }}
-                >
-                    <DialogTitle>
-                        Delete Confirmation
-                    </DialogTitle>
-                    <DialogContent>
-                        Are you sure you want to delete {toBeModified.title}?
-                    </DialogContent>
-                    <DialogActions>
-                        <button onClick={() => handleRemove(toBeModified.id)}> Confirm </button>
-                    </DialogActions>
-                </Dialog>
+                <>
+                    <Dialog 
+                        open={openDel}
+                        onClose={() => { setOpenDel(false) }}
+                    >
+                        <DialogTitle>
+                            Delete Confirmation
+                        </DialogTitle>
+                        <DialogContent>
+                            Are you sure you want to delete {toBeModified.title}?
+                        </DialogContent>
+                        <DialogActions>
+                            <button onClick={() => handleRemove(toBeModified.id)}> Confirm </button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog 
+                        open={openEdit}
+                        onClose={() => { setOpenEdit(false) }}
+                    >
+                        <DialogTitle>
+                            Edit title
+                        </DialogTitle>
+                        <DialogContent>
+                            <input defaultValue={toBeModified.title} onChange={(e) => setNewName(e.target.value)} />
+                        </DialogContent>
+                        <DialogActions>
+                            <button onClick={() => handleSave(toBeModified.id)}> Save </button>
+                        </DialogActions>
+                    </Dialog>
+                </>
             }
             
         </>

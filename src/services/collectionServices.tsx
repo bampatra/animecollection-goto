@@ -126,6 +126,18 @@ export function modifyCollections(collectionIDs, animes, callback){
     
 }
 
+export function editCollectionTitle(colID, newTitle, callback){
+    var collections = JSON.parse(localStorage.getItem('collections') || '[]');
+    var index = collections.findIndex((obj => obj.id == colID));
+    
+    if(index > -1){
+        collections[index].title = newTitle;
+        localStorage.setItem('collections', JSON.stringify(collections))
+        callback()
+    }
+
+}
+
 export function deleteCollections(id, callback){
     var collections = JSON.parse(localStorage.getItem('collections') || '[]');
     var anime_collections = JSON.parse(localStorage.getItem('anime_collections') || '[]');
