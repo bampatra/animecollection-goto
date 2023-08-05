@@ -27,7 +27,6 @@ export default function AnimeDetail(){
     });
 
     useEffect(() => {
-        console.log(data)
         setListOfCol(getCollectionsInAnime(id))
     }, [openCol])
 
@@ -47,7 +46,7 @@ export default function AnimeDetail(){
                                     {listOfColletions.map((col, i) => (
                                         <span>
                                             <Link to={`/collection/${col.id}`}>
-                                                {col.title}
+                                                <span style={{ textDecoration: 'underline' }}>{col.title}</span>
                                             </Link>
                                             {listOfColletions.length - 1 == i ? '' :', '}
                                         </span>

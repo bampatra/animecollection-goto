@@ -31,6 +31,7 @@ export default function AddToCollection({ids, closeAction, selected}){
     }
 
     function saveCols(){ 
+        console.log(selectedCols)
         modifyCollections(selectedCols, ids, function(){
             closeAction()
             setSelectedCols([])
@@ -53,14 +54,14 @@ export default function AddToCollection({ids, closeAction, selected}){
         selected.map((col) => {
             temp.push(col.id)
         })
-        setSelectedCols(temp)
+        // setSelectedCols(temp)
         setInitCols(temp)
     }, [])
 
 
     return(
         <>
-            {(collections && collections.length > 0) && 
+            {(collections && collections.length > 0) ? 
                 <form>
                     {collections.map((col) => (
                         !initCols.includes(col.id) && (
@@ -84,10 +85,13 @@ export default function AddToCollection({ids, closeAction, selected}){
                         )
                     ))}
                 </form>
+            : 
+                <p>
+                    No Collections Found
+                </p>
             }
 
-            <p onClick={handleNewCol}> Add a new collection </p>
-
+            <Button onClick={handleNewCol} variant="outlined" size="small" sx={{ marginRight: 1 }}> Add a new collection </Button>
             <Button onClick={saveCols} variant="contained" size="small"> Save </Button>
         </>
     )
