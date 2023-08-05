@@ -91,7 +91,7 @@ export default function CollectionDetail(){
                             </Link>
                             <CardContent>
                                 <Link to={`/detail/${anime.ID}`}>
-                                    <Typography gutterBottom variant="h6" component="div"  className="Title-text">
+                                    <Typography gutterBottom variant="h6" component="div" className="Title-text">
                                         {anime.title}
                                     </Typography>
                                 </Link>

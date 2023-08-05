@@ -17,29 +17,10 @@
   color: #61dafb;
 }
 
-.App-container{
-  padding: 50px;
-  max-width: 1200px;
-  display: block;
-  margin: auto;
-}
 
 a{
   text-decoration: none;
   color: inherit;
-}
-
-.Box{
-  background-color: #e0e0e0;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.List{
-  border: 1px solid #e0e0e0;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
 }
 
 .Title-text{

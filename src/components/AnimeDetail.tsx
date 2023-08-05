@@ -13,8 +13,12 @@ import AddToCollection from "./modals/AddToCollection";
 import { getCollectionsInAnime } from "../services/collectionServices";
 import Button from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
+import { MasterCSS } from "../MasterStyling";
 
 export default function AnimeDetail(){
+
+    const { DescBox } = MasterCSS
+
     let { id } = useParams();
 
     const [listOfColletions, setListOfCol] = useState<{id, title}[]>([]);
@@ -57,9 +61,9 @@ export default function AnimeDetail(){
                     </Grid>
                     <Grid item xs={12} md={9}>
                         <h2>{data.Media.title.romaji || ''}</h2>
-                        <div className="Box">
+                        <DescBox>
                             <span dangerouslySetInnerHTML={{__html: data.Media.description || ''}}></span>
-                        </div>
+                        </DescBox>
                         
                         <p>Number of episodes: {data.Media.episodes}</p>
                         <p>Genres: {data.Media.genres.join(', ')}</p>
