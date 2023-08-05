@@ -11,6 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddToCollection from "./modals/AddToCollection";
 import { getCollectionsInAnime } from "../services/collectionServices";
+import Button from '@mui/material/Button';
 
 export default function AnimeDetail(){
     let { id } = useParams();
@@ -25,34 +26,47 @@ export default function AnimeDetail(){
     });
 
     useEffect(() => {
+        console.log(data)
         setListOfCol(getCollectionsInAnime(id))
     }, [openCol])
 
     return(
         <>
             {data && 
-                <>
-                    <p>{data.Media.title.romaji || ''}</p>
-                    <span>{data.Media.description || ''}</span>
-                    <br/><br/>
-                    <button onClick={() => setOpenCol(true)}> Add to Collection </button>
-                
-                    {listOfColletions.length > 0 && (
-                        <>
-                            <br/>
-                            <span> Saved to: </span>
-                            
-                            {listOfColletions.map((col, i) => (
-                                <span>
-                                    <Link to={`/collection/${col.id}`}>
-                                        {col.title}
-                                    </Link>
-                                    {listOfColletions.length - 1 == i ? '' :', '}
-                                </span>
-                            ))}
-                        </>
-                    )}
-
+                <Grid container spacing={5}>
+                    <Grid item xs={12} md={3}>
+                        <img src={data.Media.coverImage.large} />
+                        <Button onClick={() => setOpenCol(true)} variant="contained" size="small" style={{ marginTop: '20px' }}> 
+                            Add to Collection 
+                        </Button>
+                        {listOfColletions.length > 0 && (
+                            <>
+                                <p> Saved in: 
+                                    <br />
+                                    {listOfColletions.map((col, i) => (
+                                        <span>
+                                            <Link to={`/collection/${col.id}`}>
+                                                {col.title}
+                                            </Link>
+                                            {listOfColletions.length - 1 == i ? '' :', '}
+                                        </span>
+                                    ))}
+                                </p>
+                            </>
+                        )}
+                    </Grid>
+                    <Grid item xs={12} md={9}>
+                        <h2>{data.Media.title.romaji || ''}</h2>
+                        <div className="Box">
+                            <span dangerouslySetInnerHTML={{__html: data.Media.description || ''}}></span>
+                        </div>
+                        
+                        <p>Number of episodes: {data.Media.episodes}</p>
+                        <p>Genres: {data.Media.genres.join(', ')}</p>
+                        <p>Rating: {data.Media.averageScore}</p>
+                        
+                    </Grid>
+                    
                     <Dialog 
                         open={openCol}
                         onClose={() => { setOpenCol(false) }}
@@ -75,7 +89,7 @@ export default function AnimeDetail(){
 
                         </DialogActions>
                     </Dialog>
-                </>
+                </Grid>
             }
             
         </>

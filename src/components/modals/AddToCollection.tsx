@@ -1,6 +1,7 @@
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { modifyCollections, createCollection } from "../../services/collectionServices"
+import { Button } from "@mui/material";
 
 export default function AddToCollection({ids, closeAction, selected}){
     const [initCols, setInitCols] = useState<number[]>([]);
@@ -16,6 +17,7 @@ export default function AddToCollection({ids, closeAction, selected}){
     function saveCols(){ 
         modifyCollections(selectedCols, ids, function(){
             closeAction()
+            setSelectedCols([])
         })
     }
 
@@ -70,7 +72,7 @@ export default function AddToCollection({ids, closeAction, selected}){
 
             <p onClick={handleNewCol}> Add a new collection </p>
 
-            <button onClick={saveCols}> Save </button>
+            <Button onClick={saveCols} variant="contained" size="small"> Save </Button>
         </>
     )
 }

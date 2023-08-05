@@ -8,6 +8,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { colTitleCheck } from "../helpers/collectionHelpers";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { TextField } from "@mui/material";
+import CreateIcon from '@mui/icons-material/Create';
+
 
 export default function CollectionDetail(){
     let { id } = useParams();
@@ -65,24 +74,39 @@ export default function CollectionDetail(){
 
     return(
         <>
-            <p>{title}</p>
-            <p onClick={() => { setOpenEdit(true) }}> Edit Title </p>
-            <Grid container spacing={1}>
+            <h1 style={{ marginTop: '0px' }}>
+                {title} <CreateIcon onClick={() => { setOpenEdit(true) }}/> 
+            </h1>
+            <Grid container spacing={3}>
                 {animes.map((anime) => (
-                    <Grid item xs={12} sm={6}>
-                        <Link to={`/detail/${anime.ID}`}>
-                            <Grid item xs={12} sm={5}>
-                                <img src={anime.coverImage} />
-                            </Grid>
-                            <Grid item xs={12} sm={7}>
-                                <p> {anime.title} </p>
-                                <p onClick={(e) => {
-                                    e.preventDefault()
-                                    setToBeModified(anime)
-                                    setOpenDel(true)
-                                }}> Remove </p>
-                            </Grid>
-                        </Link>
+                    <Grid item xs={12} sm={4} md={3}>
+                        <Card>
+                            <Link to={`/detail/${anime.ID}`}>
+                                <CardMedia
+                                    component="img"
+                                    alt="green iguana"
+                                    height="350"
+                                    image={anime.coverImage}
+                                />
+                            </Link>
+                            <CardContent>
+                                <Link to={`/detail/${anime.ID}`}>
+                                    <Typography gutterBottom variant="h6" component="div"  className="Title-text">
+                                        {anime.title}
+                                    </Typography>
+                                </Link>
+                            </CardContent>
+                            <CardActions>
+                                <Button 
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        setToBeModified(anime)
+                                        setOpenDel(true)
+                                    }} size="small" color="error"> 
+                                    Remove
+                                </Button>
+                            </CardActions>
+                        </Card>
                     </Grid>
                 ))}
             </Grid>
@@ -90,15 +114,24 @@ export default function CollectionDetail(){
             <Dialog 
                 open={openEdit}
                 onClose={() => { setOpenEdit(false) }}
+                fullWidth
             >
                 <DialogTitle>
                     Edit title
                 </DialogTitle>
                 <DialogContent>
-                    <input defaultValue={title} onChange={(e) => setTempTitle(e.target.value)} />
+                    <TextField
+                        id="standard-multiline-static"
+                        multiline
+                        rows={1}
+                        defaultValue={title}
+                        variant="standard"
+                        onChange={(e) => setTempTitle(e.target.value)}
+                        fullWidth
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <button onClick={() => handleSave()}> Save </button>
+                    <Button onClick={() => handleSave()} size="small" variant="contained"> Save </Button>
                 </DialogActions>
             </Dialog>
 
@@ -114,7 +147,7 @@ export default function CollectionDetail(){
                         Are you sure you want to delete {toBeModified.title}?
                     </DialogContent>
                     <DialogActions>
-                        <button onClick={() => handleRemove(toBeModified.ID)}> Confirm </button>
+                        <Button onClick={() => handleRemove(toBeModified.ID)} size="small" variant="contained" color="error"> Confirm </Button>
                     </DialogActions>
                 </Dialog>
             }

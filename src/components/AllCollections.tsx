@@ -8,6 +8,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { createCollection, deleteCollections, editCollectionTitle, joinAnimeCollections } from "../services/collectionServices";
 import { colTitleCheck } from "../helpers/collectionHelpers";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { TextField } from "@mui/material";
 
 export default function AllCollections(){
 
@@ -74,20 +81,34 @@ export default function AllCollections(){
 
     return(
         <>
+            <h1 style={{ marginTop: '0px' }}> My Collections </h1>
             <br/>
-            <button onClick={() => setOpenCol(true)}> Add a collection </button>
+            <Button onClick={() => setOpenCol(true)} variant="contained"> Add a collection </Button>
             <br/><br/>
             <Grid container spacing={3}>
                 {data &&
                     <>
                         {data.map((collection) => (
-                            <Grid item xs={12} sm={4} md={3} style={{ textAlign: 'center' }}>
-                                <Link to={`/collection/${collection.id}`}>
-                                    <img src={collection.animeList && collection.animeList.length > 0 ? collection.animeList[0].coverImage : '/default_movie.png'} />
-                                    <p> {collection.title} </p>
-                                </Link>
-                                <p onClick={() => { setToBeModified(collection); setOpenDel(true);  }}> Delete </p>
-                                <p onClick={() => { setToBeModified(collection); setOpenEdit(true);  }}> Edit </p>
+                            <Grid item xs={12} sm={4} md={3}>
+                                <Card>
+                                    <Link to={`/collection/${collection.id}`}>
+                                        <CardMedia
+                                            component="img"
+                                            alt="green iguana"
+                                            height="350"
+                                            image={collection.animeList && collection.animeList.length > 0 ? collection.animeList[0].coverImage : '/default_movie.png'}
+                                        />
+                                    </Link>
+                                    <CardContent>
+                                        <Link to={`/collection/${collection.id}`}>
+                                            <Typography gutterBottom variant="h6" component="div">{collection.title}</Typography>
+                                        </Link>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button onClick={() => { setToBeModified(collection); setOpenDel(true);  }} size="small" color="error">Delete</Button>
+                                        <Button onClick={() => { setToBeModified(collection); setOpenEdit(true);  }} size="small">Edit</Button>
+                                    </CardActions>
+                                </Card>
                             </Grid>
                         ))}
                     </>
@@ -102,10 +123,18 @@ export default function AllCollections(){
                     Enter the title for your new collection
                 </DialogTitle>
                 <DialogContent>
-                    <input value={newName} onChange={(e) => setNewName(e.target.value)} />
+                    <TextField
+                        id="standard-multiline-static"
+                        multiline
+                        rows={1}
+                        value={newName} 
+                        variant="standard"
+                        onChange={(e) => setNewName(e.target.value)}
+                        fullWidth
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <button onClick={handleAdd}> Save </button>
+                    <Button onClick={handleAdd}> Save </Button>
                 </DialogActions>
             </Dialog>
 
@@ -122,22 +151,33 @@ export default function AllCollections(){
                             Are you sure you want to delete {toBeModified.title}?
                         </DialogContent>
                         <DialogActions>
-                            <button onClick={() => handleRemove(toBeModified.id)}> Confirm </button>
+                            <Button onClick={() => handleRemove(toBeModified.id)} color="error" size="small" variant="contained"> 
+                                Confirm 
+                            </Button>
                         </DialogActions>
                     </Dialog>
 
                     <Dialog 
                         open={openEdit}
                         onClose={() => { setOpenEdit(false) }}
+                        fullWidth
                     >
                         <DialogTitle>
                             Edit title
                         </DialogTitle>
                         <DialogContent>
-                            <input defaultValue={toBeModified.title} onChange={(e) => setNewName(e.target.value)} />
+                            <TextField
+                                id="standard-multiline-static"
+                                multiline
+                                rows={1}
+                                defaultValue={toBeModified.title}
+                                variant="standard"
+                                onChange={(e) => setNewName(e.target.value)}
+                                fullWidth
+                            />
                         </DialogContent>
                         <DialogActions>
-                            <button onClick={() => handleSave(toBeModified.id)}> Save </button>
+                            <Button onClick={() => handleSave(toBeModified.id)}> Save </Button>
                         </DialogActions>
                     </Dialog>
                 </>
