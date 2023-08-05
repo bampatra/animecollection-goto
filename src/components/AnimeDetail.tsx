@@ -12,6 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AddToCollection from "./modals/AddToCollection";
 import { getCollectionsInAnime } from "../services/collectionServices";
 import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
 
 export default function AnimeDetail(){
     let { id } = useParams();
@@ -32,7 +33,7 @@ export default function AnimeDetail(){
 
     return(
         <>
-            {data && 
+            {data ?
                 <Grid container spacing={5}>
                     <Grid item xs={12} md={3}>
                         <img src={data.Media.coverImage.large} />
@@ -90,6 +91,17 @@ export default function AnimeDetail(){
                         </DialogActions>
                     </Dialog>
                 </Grid>
+            : 
+                <>
+                    <Grid container spacing={5}>
+                        <Grid item xs={12} md={3}>
+                            <Skeleton variant="rectangular" height={400} />
+                        </Grid>
+                        <Grid item xs={12} md={9}>
+                            <Skeleton variant="rectangular" height={350} />
+                        </Grid>
+                    </Grid>
+                </>
             }
             
         </>

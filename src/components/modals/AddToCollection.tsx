@@ -2,6 +2,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { modifyCollections, createCollection } from "../../services/collectionServices"
 import { Button } from "@mui/material";
+import { colTitleCheck } from "../../helpers/collectionHelpers";
 
 export default function AddToCollection({ids, closeAction, selected}){
     const [initCols, setInitCols] = useState<number[]>([]);
@@ -9,7 +10,22 @@ export default function AddToCollection({ids, closeAction, selected}){
     const [selectedCols, setSelectedCols] = useState<number[]>([]);
 
     function handleNewCol(){
-        createCollection("New Collection", function(data){
+        let title = "New Collection"
+        
+        if(!colTitleCheck(title)){
+            let i = 1;
+            while(i < 100){
+                let checkStr = `${title} ${i}`
+                if(colTitleCheck(checkStr)){
+                    title = checkStr
+                    break;
+                }
+                i++;
+            }
+
+        }
+
+        createCollection(title, function(data){
             setCollections(data)
         })
     }

@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Pagination, Stack } from "@mui/material";
+import Skeleton from '@mui/material/Skeleton';
 
 export default function MainPage(){
 
@@ -34,7 +35,7 @@ export default function MainPage(){
             <h1> Discover Anime </h1>
             <br/>
             <Grid container spacing={5}>
-                {data &&
+                {data ?
                     <>
                         {data.Page.media.map((anime) => (
                             <Grid item xs={12} sm={4} md={3}>
@@ -55,6 +56,14 @@ export default function MainPage(){
                                 </Link>
                             </Grid>
                         ))}
+                    </>
+                : 
+                    <>
+                        {[...Array(10)].map((x, i) =>
+                            <Grid item xs={12} sm={4} md={3}>
+                                <Skeleton variant="rectangular" height={350} />
+                            </Grid>
+                        )}
                     </>
                 }
             </Grid>
