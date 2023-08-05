@@ -8,7 +8,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Pagination } from "@mui/material";
+import { Pagination, Stack } from "@mui/material";
 
 export default function MainPage(){
 
@@ -20,6 +20,10 @@ export default function MainPage(){
             perPage: 10
         }
     });
+
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
+      };
 
     useEffect(() => {
         
@@ -54,6 +58,12 @@ export default function MainPage(){
                     </>
                 }
             </Grid>
+            <br/>
+            <br/>
+            <Stack alignItems="center">
+                <Pagination count={10} page={page} onChange={handlePageChange} size="large"/>
+            </Stack>
+            
         </>
     )
 }
